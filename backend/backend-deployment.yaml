@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: localhost:5000/backend:latest
+          ports:
+            - containerPort: 4040
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: ACCESS_TOKEN_SECRET
+              value: "asjdksjdkjaksjfhqi19298072hakk10034h4nkajksjd991"
+            - name: REFRESH_TOKEN_SECRET
+              value: "bbhdbhfkjakjs44dljgl73blakslkdbglkglgklaksh19947"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: NodePort
+  ports:
+    - port: 4040
+      targetPort: 4040
+      nodePort: 30001
+  selector:
+    app: backend
